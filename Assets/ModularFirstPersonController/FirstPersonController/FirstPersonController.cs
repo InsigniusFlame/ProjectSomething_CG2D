@@ -131,6 +131,18 @@ public class FirstPersonController : MonoBehaviour
 
     #endregion
 
+    private void ResetHeadBob()
+{
+    if (joint == null) return;
+
+    timer = 0f;
+
+    joint.localPosition = Vector3.Lerp(
+        joint.localPosition,
+        jointOriginalPos,
+        Time.deltaTime * bobSpeed
+    );
+}
 
     private void Awake()
     {
@@ -358,10 +370,15 @@ public class FirstPersonController : MonoBehaviour
 
         CheckGround();
 
-        if(enableHeadBob)
+        if (enableHeadBob && playerCanMove)
         {
             HeadBob();
         }
+        else
+        {
+            ResetHeadBob();
+        }
+
     }
 
     void FixedUpdate()
