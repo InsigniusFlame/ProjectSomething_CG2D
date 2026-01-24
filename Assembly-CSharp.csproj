@@ -49,13 +49,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Custom Scripts/InventoryToggle.cs" />
+    <Compile Include="Assets/sway.cs" />
     <Compile Include="Assets/Custom Scripts/ItemMenu.cs" />
+    <Compile Include="Assets/Defender Knife Set/Scripts/rorateslow.cs" />
     <Compile Include="Assets/ModularFirstPersonController/FirstPersonController/FirstPersonController.cs" />
     <Compile Include="Assets/Custom Scripts/InventorySystem.cs" />
     <Compile Include="Assets/Custom Scripts/ItemData.cs" />
     <Compile Include="Assets/Custom Scripts/PlayerInventory.cs" />
     <Compile Include="Assets/Custom Scripts/GiveItem.cs" />
     <Compile Include="Assets/Custom Scripts/InventoryItem.cs" />
+    <Compile Include="Assets/knife_equip.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets/TextMesh Pro/Shaders/TMPro.cginc" />
