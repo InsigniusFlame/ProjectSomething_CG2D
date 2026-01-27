@@ -69,7 +69,7 @@ public class FirstPersonController : MonoBehaviour
     public KeyCode sprintKey = KeyCode.LeftShift;
     public float sprintSpeed = 7f;
     public float sprintDuration = 5f;
-    public float sprintCooldown = .5f;
+    public float sprintCooldown = .5f; // this needs to be amended somehow
     public float sprintFOV = 80f;
     public float sprintFOVStepTime = 10f;
 
@@ -382,77 +382,49 @@ public class FirstPersonController : MonoBehaviour
     }
 
     void FixedUpdate()
+{
+    if (playerCanMove)
     {
-        #region Movement
+        float currentSpeed = walkSpeed;
 
-        if (playerCanMove)
+        // Determine State and Speed
+        if (isCrouched)
         {
-            // Calculate how fast we should be moving
-            Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-
-            // Checks if player is walking and isGrounded
-            // Will allow head bob
-            if (targetVelocity.x != 0 || targetVelocity.z != 0 && isGrounded)
-            {
-                isWalking = true;
-            }
-            else
-            {
-                isWalking = false;
-            }
-
-            // All movement calculations shile sprint is active
-            if (enableSprint && Input.GetKey(sprintKey) && sprintRemaining > 0f && !isSprintCooldown && !isCrouched)
-            {
-                targetVelocity = transform.TransformDirection(targetVelocity) * sprintSpeed;
-
-                // Apply a force that attempts to reach our target velocity
-                Vector3 velocity = rb.linearVelocity;
-                Vector3 velocityChange = (targetVelocity - velocity);
-                velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-                velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-                velocityChange.y = 0;
-
-                // Player is only moving when valocity change != 0
-                // Makes sure fov change only happens during movement
-                if (velocityChange.x != 0 || velocityChange.z != 0)
-                {
-                    isSprinting = true;
-
-                    if (hideBarWhenFull && !unlimitedSprint)
-                    {
-                        sprintBarCG.alpha += 5 * Time.deltaTime;
-                    }
-                }
-
-                rb.AddForce(velocityChange, ForceMode.VelocityChange);
-            }
-            // All movement calculations while walking
-            else
-            {
-                isSprinting = false;
-
-                if (hideBarWhenFull && sprintRemaining == sprintDuration)
-                {
-                    sprintBarCG.alpha -= 3 * Time.deltaTime;
-                }
-
-                targetVelocity = transform.TransformDirection(targetVelocity) * walkSpeed;
-
-                // Apply a force that attempts to reach our target velocity
-                Vector3 velocity = rb.linearVelocity;
-                Vector3 velocityChange = (targetVelocity - velocity);
-                velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-                velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-                velocityChange.y = 0;
-
-                rb.AddForce(velocityChange, ForceMode.VelocityChange);
-            }
+            currentSpeed = walkSpeed * speedReduction;
+            isSprinting = false; // Cannot sprint while crouching
+        }
+        else if (enableSprint && Input.GetKey(sprintKey) && sprintRemaining > 0f && !isSprintCooldown)
+        {
+            currentSpeed = sprintSpeed;
+            isSprinting = true;
+        }
+        else
+        {
+            currentSpeed = walkSpeed;
+            isSprinting = false;
         }
 
-        #endregion
-    }
+        // Calculate Velocity
+        Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        targetVelocity = transform.TransformDirection(targetVelocity) * currentSpeed;
 
+        Vector3 velocity = rb.linearVelocity;
+        Vector3 velocityChange = (targetVelocity - velocity);
+        velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+        velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+        velocityChange.y = 0;
+
+        rb.AddForce(velocityChange, ForceMode.VelocityChange);
+
+        // Handle Headbob logic
+        isWalking = (targetVelocity.x != 0 || targetVelocity.z != 0) && isGrounded;
+        
+        if (isSprinting && hideBarWhenFull && !unlimitedSprint)
+            sprintBarCG.alpha += 5 * Time.deltaTime;
+        else if (!isSprinting && hideBarWhenFull && sprintRemaining == sprintDuration)
+            sprintBarCG.alpha -= 3 * Time.deltaTime;
+    }
+}
     // Sets isGrounded based on a raycast sent straigth down from the player object
     private void CheckGround()
     {
@@ -489,24 +461,17 @@ public class FirstPersonController : MonoBehaviour
 
     private void Crouch()
     {
-        // Stands player up to full height
-        // Brings walkSpeed back up to original speed
         if(isCrouched)
         {
             transform.localScale = new Vector3(originalScale.x, originalScale.y, originalScale.z);
-            walkSpeed /= speedReduction;
-
             isCrouched = false;
         }
-        // Crouches player down to set height
-        // Reduces walkSpeed
         else
         {
             transform.localScale = new Vector3(originalScale.x, crouchHeight, originalScale.z);
-            walkSpeed *= speedReduction;
-
             isCrouched = true;
         }
+    //  removed the walkSpeed *= speedReduction line
     }
 
     private void HeadBob()
