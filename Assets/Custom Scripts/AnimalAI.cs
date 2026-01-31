@@ -157,10 +157,10 @@ public class AnimalAI : MonoBehaviour
 
         Debug.Log($"{gameObject.name} took {damage} damage! Health: {currentHealth}");
 
-        if (currentHealth <= 0)
-        {
-            CollectAnimal();
-        }
+        // if (currentHealth <= 0)
+        // {
+        //     CollectAnimal();
+        // }
     }
 
     private void ApplyFlashColor(Color color)
@@ -181,23 +181,23 @@ public class AnimalAI : MonoBehaviour
         }
     }
 
-    private void CollectAnimal()
-    {
-        Debug.Log($"{animalName} collected!");
+    // private void CollectAnimal()
+    // {
+    //     Debug.Log($"{animalName} collected!");
         
-        // Notify inventory system
-        if (InventoryManager.Instance != null)
-        {
-            InventoryManager.Instance.AddItem(animalName, 1);
-        }
-        else
-        {
-            Debug.LogWarning("InventoryManager not found in scene!");
-        }
+    //     // Notify inventory system
+    //     if (InventoryManager.Instance != null)
+    //     {
+    //         InventoryManager.Instance.AddItem(animalName, 1);
+    //     }
+    //     else
+    //     {
+    //         Debug.LogWarning("InventoryManager not found in scene!");
+    //     }
 
-        // Remove from scene
-        Destroy(gameObject);
-    }
+    //     // Remove from scene
+    //     Destroy(gameObject);
+    // }
 
     /// <summary>
     /// Pick a random speed for this roaming segment.
