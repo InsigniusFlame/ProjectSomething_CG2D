@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 
 public class InventoryItem : MonoBehaviour,IPointerClickHandler
 {
+    private Equipment curEquipment;
     private ItemData curItem;
     private GameObject useMenu;
     public void Setup(ItemData item,GameObject _useMenu)

@@ -11,7 +11,7 @@ public class ItemData : ScriptableObject
     public bool edible;
     public int calories;
 
-    public void Use(GameObject user)
+    public virtual void Use(GameObject user)
     {
         if (edible)
         {
