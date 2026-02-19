@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4459864850019384740}
   - component: {fileID: -4743289305238447470}
   - component: {fileID: 6981594150070821623}
+  - component: {fileID: -4030904090668717326}
   m_Layer: 0
   m_Name: FPSWithInv
   m_TagString: Player
@@ -214,6 +215,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
   myItems: []
+  hunger: 100
+  updateInvPending: 0
 --- !u!114 &6981594150070821623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -229,6 +232,25 @@ MonoBehaviour:
   inventoryPanel: {fileID: 0}
   slotPrefab: {fileID: 0}
   contentParent: {fileID: 0}
+  useMenu: {fileID: 0}
+--- !u!114 &-4030904090668717326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4459864850019384750}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c823321b3014574681fdad56cbb70e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageSystem
+  maxHealth: 100
+  currentHealth: 100
+  flashDuration: 0.3
+  borderThickness: 0.15
+  flashColor: {r: 1, g: 0, b: 0, a: 0.6}
+  damageCooldown: 0.5
 --- !u!1 &4459864850190357393
 GameObject:
   m_ObjectHideFlags: 0
